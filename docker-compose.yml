@@ -8,12 +8,11 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
-      - /app/.cache.json
     environment:
       - PYTHONUNBUFFERED=1
       - PORT=8000
     restart: unless-stopped
-    ipc: host # Recommended for Chromium in Docker
+    ipc: host # Recommended for Playwright Chromium in Docker
 
   frontend:
     build:
@@ -29,4 +28,3 @@ services:
 networks:
   default:
     name: currency_network
-

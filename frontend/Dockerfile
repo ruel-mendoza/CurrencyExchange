@@ -3,12 +3,19 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Copy package manifests first for optimal caching
 COPY package*.json ./
+
+# Install dependencies inside Linux container
 RUN npm install
 
-# Build production bundle
+# Copy source code (excluding node_modules and dist via .dockerignore)
 COPY . .
+
+# Ensure binaries have executable permissions
+RUN chmod +x node_modules/.bin/* || true
+
+# Build production bundle
 RUN npm run build
 
 # Stage 2: Serve with Nginx
@@ -24,4 +31,3 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]
-
