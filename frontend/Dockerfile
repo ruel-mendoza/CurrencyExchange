@@ -9,11 +9,11 @@ COPY package*.json ./
 # Install dependencies inside Linux container
 RUN npm install
 
-# Copy source code (excluding node_modules and dist via .dockerignore)
+# Copy source code
 COPY . .
 
-# Ensure binaries have executable permissions
-RUN chmod +x node_modules/.bin/* || true
+# Grant full executable permissions recursively across .bin
+RUN chmod -R +x node_modules/.bin
 
 # Build production bundle
 RUN npm run build
